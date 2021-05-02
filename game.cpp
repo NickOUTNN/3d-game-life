@@ -70,7 +70,7 @@ struct View3d : iView
     }
     void draw()
     {
-        for (int i = 0; i < k; i++)
+        for (int i = 1; i < k-1; i++)
         {
             for (int j = 0; j < n; j++)
             {
@@ -86,8 +86,8 @@ enum Rools
 {
     rool12d = 2,
     rool22d = 3,
-    rool13d = 2,
-    rool23d = 3
+    rool13d = 6,
+    rool23d = 9
 };
 struct iGame
 {
@@ -190,11 +190,12 @@ struct Game3d :iGame
     int getCount(int x, int y, int z)
     {
         int count = 0;
-        for (int j = -1; j <= 1; j++)
-            for (int k = -1; k <= 1; k++)
-                if (field[x][y + j][z + k] == view.livingCell)
+      for (int i=-1;i<=1;i++)
+         for (int j = -1; j <= 1; j++)
+             for (int k = -1; k <= 1; k++)
+                if (field[x+i][y + j][z + k] == view.livingCell)
                     count++;
-        return count;
+          return count;
     }
     Game3d(int k1, int n1, int m1, int seed, double probability)
     {
@@ -202,9 +203,9 @@ struct Game3d :iGame
         n = n1;
         m = m1;
         k = k1;
-        field = new char** [k];
-        field_next = new char** [k];
-        for (int i = 0; i < k; i++)
+        field = new char** [k+2];
+        field_next = new char** [k+2];
+        for (int i = 0; i < k+2; i++)
         {
             field[i] = new char* [n + 2];
             field_next[i] = new char* [n + 2];
@@ -232,20 +233,20 @@ struct Game3d :iGame
     {
         while (numIt)
         {
-            for (int i = 0; i < k; i++)
+            for (int i = 1; i < k+1; i++)
             {
                 for (int j = 1; j < n + 1; j++)
                 {
                     for (int l = 1; l < m + 1; l++)
                     {
-                        if (field[i][j][l] == view.livingCell && (getCount(i, j, l) < rool13d || getCount(i, j, l) > rool23d))
+                        if (field[i][j][l] == view.livingCell && ((getCount(i, j, l)-1) < rool13d || (getCount(i, j, l)-1) > rool23d))
                             field_next[i][j][l] = view.dyingCell;
                         else if (field[i][j][l] == view.dyingCell && getCount(i, j, l) == rool23d)
                             field_next[i][j][l] = view.livingCell;
                     }
                 }
             }
-            for (int i = 0; i < k; i++)
+            for (int i = 0; i < k+2; i++)
             {
                 for (int j = 0; j < n + 2; j++)
                 {
@@ -258,16 +259,16 @@ struct Game3d :iGame
             }
             numIt--;
         }
-        view.setField(field, k, n + 2, m + 2);
+        view.setField(field, k+2, n + 2, m + 2);
         view.draw();
     }
 };
 int main()
 {
     iGame* k;
-    Game3d* b = new Game3d(2, 2, 2, 5, 1);
+    Game3d* b = new Game3d(3, 5, 5, 1 , 10);
     k = b;
-    k->runGame(0);
+    k->runGame(1);
 
     return 0;
 }
