@@ -1,4 +1,4 @@
-#include <windows.h>
+﻿#include <windows.h>
 #include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -133,10 +133,15 @@ struct Game2d :iGame
             field_next[i] = new char[m + 2];
             for (int j = 0; j < m + 2; j++)
             {
-
-                if ((tmp) <= (100 * probability))
-                {
-                    field[i][j] = view.livingCell;
+                if ((1<=j && j<m+1) && (1<= i && i< n + 1)) {
+                    if ((tmp % 10000) <= (10000 * probability))
+                    {
+                        field[i][j] = view.livingCell;
+                    }
+                    else
+                    {
+                        field[i][j] = view.dyingCell;
+                    }
                 }
                 else
                 {
@@ -207,6 +212,7 @@ struct Game3d :iGame
         field_next = new char** [k+2];
         for (int i = 0; i < k+2; i++)
         {
+            
             field[i] = new char* [n + 2];
             field_next[i] = new char* [n + 2];
             for (int j = 0; j < n + 2; j++)
@@ -215,9 +221,16 @@ struct Game3d :iGame
                 field_next[i][j] = new char[m + 2];
                 for (int l = 0; l < m + 2; l++)
                 {
-                    if ((tmp) <= (100 * probability))
+                    if ((1 <= j && j < n + 1) && (1 <= i && i < k + 1)&& (1 <= l && l < m + 1))
                     {
-                        field[i][j][l] = view.livingCell;
+                        if ((tmp%10000) <= (10000 * probability))
+                        {
+                            field[i][j][l] = view.livingCell;
+                        }
+                        else
+                        {
+                            field[i][j][l] = view.dyingCell;
+                        }
                     }
                     else
                     {
@@ -241,7 +254,7 @@ struct Game3d :iGame
                     {
                         if (field[i][j][l] == view.livingCell && ((getCount(i, j, l)-1) < rool13d || (getCount(i, j, l)-1) > rool23d))
                             field_next[i][j][l] = view.dyingCell;
-                        else if (field[i][j][l] == view.dyingCell && getCount(i, j, l) == rool23d)
+                        else if (field[i][j][l] == view.dyingCell && ((getCount(i, j, l) <= rool23d)&& (getCount(i, j, l) >= rool13d)))
                             field_next[i][j][l] = view.livingCell;
                     }
                 }
@@ -266,9 +279,9 @@ struct Game3d :iGame
 int main()
 {
     iGame* k;
-    Game3d* b = new Game3d(3, 5, 5, 1 , 10);
+    Game3d* b = new Game3d(3,5, 5, 1 , 0.1);
     k = b;
-    k->runGame(1);
+    k->runGame(6);
 
     return 0;
 }
