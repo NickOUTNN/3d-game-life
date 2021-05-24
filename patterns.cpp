@@ -417,15 +417,6 @@ public:
                 cout << *game;
                 status = gameReady;
             }
-            if (_kbhit()&& (status != gamePause))
-            {
-                    int c = _getch();
-                    if (c == 'p')
-                    {
-                        system("cls");
-                        status = gamePause;
-                    }
-            }
             else if (status == gamePause)
             {
                 cout << "вы поставили игру на паузу,выберите l, чтобы продолжить или j, чтобы начать заново\n";
@@ -441,10 +432,19 @@ public:
             }
             else if (status == gameRun)
             {
+                if (_kbhit() && (status != gamePause))
+                {
+                    int c = _getch();
+                    if (c == 'p')
+                    {
+                        system("cls");
+                        status = gamePause;
+                    }
+                }
                 system("cls");
                 game->runGame(1);
                 cout << *game;
-                Sleep(500);
+                Sleep(200);
             }
             else if (status == gameOver)
             {
